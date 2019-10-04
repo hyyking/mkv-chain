@@ -6,7 +6,7 @@ probability of each event depends only on the state attained in the previous eve
 
 ```rust
 # extern crate markov_chain;
-# use markov_chain::{MarkovChain, alg::{Matrix3, Vec3}};
+# use markov_chain::{MarkovChain3, alg::{Matrix3, Vec3}};
 # fn main() {
     let t_mat = Matrix3::new(  // Transition Matrix
         [0.9, 0.0, 0.1],

@@ -1,0 +1,1 @@
+initSidebarItems({"struct":[["Matrix3","3x3 Square Matrix"],["Vec3","Vector with 3 elements"]]});

@@ -27,64 +27,7 @@ probability of each event depends only on the state attained in the previous eve
 #![allow(dead_code)]
 
 ///! Algebra module for MarkovChains
-pub mod alg {
-    ///! 3x3 Square Matrix
-    #[derive(Debug)]
-    pub struct Matrix3 {
-        ///! A column major matrix is a collection of vectors
-        pub(crate) data: [Vec3; 3],
-    }
-
-    impl Matrix3 {
-        ///! Construct a Matrix from a row major representation
-        pub fn new(v1: [f64; 3], v2: [f64; 3], v3: [f64; 3]) -> Self {
-            Self {
-                data: [
-                    Vec3::new([v1[0], v2[0], v3[0]]),
-                    Vec3::new([v1[1], v2[1], v3[1]]),
-                    Vec3::new([v1[2], v2[2], v3[2]]),
-                ],
-            }
-        }
-    }
-
-    ///! Vector with 3 elements
-    #[derive(Debug, PartialEq, Copy, Clone)]
-    pub struct Vec3 {
-        ///! Collection of elements
-        pub(crate) data: [f64; 3],
-    }
-
-    impl Vec3 {
-        ///! Construct a vector from an array
-        pub fn new(data: [f64; 3]) -> Self {
-            Self { data }
-        }
-        ///! Downcast the vector to an owned array
-        pub fn downcast(self) -> [f64; 3] {
-            self.data
-        }
-    }
-
-    impl std::ops::Mul for Vec3 {
-        type Output = f64;
-        fn mul(self, other: Vec3) -> Self::Output {
-            self.data.iter().zip(&other.data).map(|(x, y)| x * y).sum()
-        }
-    }
-    impl std::ops::Mul for &Vec3 {
-        type Output = f64;
-        fn mul(self, other: &Vec3) -> Self::Output {
-            self.data.iter().zip(&other.data).map(|(x, y)| x * y).sum()
-        }
-    }
-    impl std::ops::Mul for &mut Vec3 {
-        type Output = f64;
-        fn mul(self, other: &mut Vec3) -> Self::Output {
-            self.data.iter().zip(&other.data).map(|(x, y)| x * y).sum()
-        }
-    }
-}
+pub mod alg;
 
 ///! MarkovChain with three nodes
 pub struct MarkovChain3 {
@@ -93,28 +36,55 @@ pub struct MarkovChain3 {
 }
 
 impl MarkovChain3 {
-    ///! Construct a Markov Chain
+    ///! Construct a Markov Chain.
     pub fn from(trans: alg::Matrix3, init: alg::Vec3) -> Self {
         Self { trans, init }
     }
-    ///! Check if the chain has an absorbing state
+
+    ///! Replace the transition matrix
+    pub fn set_trans(&mut self, new_t: alg::Matrix3) {
+        self.trans = new_t;
+    }
+
+    ///! Replace the initial state
+    pub fn set_init(&mut self, new_t: alg::Vec3) {
+        self.init = new_t;
+    }
+
+    ///! Run the chain until to a step.
+    pub fn take_to(&self, state: usize) -> alg::Vec3 {
+        let mut result = self.init;
+        (0..state).for_each(|_| {
+            self.trans.iter().enumerate().for_each(|(i, vec)| {
+                result[i] = &result * vec;
+            })
+        });
+        result
+    }
+
+    ///! Check if the chain has an absorbing state.
     pub fn has_absorbing_state(&self) -> bool {
-        for vec in &self.trans.data {
-            if (vec.data[0] == 1.0_f64) | (vec.data[1] == 1.0_f64) | (vec.data[2] == 1.0_f64) {
+        for vec in self.trans.iter() {
+            if Self::could_absorb(vec) {
                 return true;
             }
         }
         return false;
     }
-    ///! Run the chain until to a step
-    pub fn take_to(&self, state: usize) -> alg::Vec3 {
-        let mut result = self.init;
-        (0..state).for_each(|_| {
-            self.trans.data.iter().enumerate().for_each(|(i, vec)| {
-                result.data[i] = &result * vec;
-            })
+
+    /// A state is considered absorbing if it has a probability of 1 to itself and there is a least
+    /// one path leading to it.
+    fn could_absorb(vec: &alg::Vec3) -> bool {
+        let mut has_one = false;
+        let mut has_nz = false;
+        vec.iter().for_each(move |el| {
+            if *el == 1.0_f64 {
+                has_one = true;
+            } else if *el != 0.0f64 {
+                has_nz = true;
+            }
         });
-        result
+        has_one && has_nz
     }
 }
 

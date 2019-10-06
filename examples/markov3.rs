@@ -1,7 +1,7 @@
 extern crate markov_chain;
 
 use markov_chain::{
-    alg::{Matrix3, Vec3},
+    linalg::{Matrix3, Vec3},
     MarkovChain3,
 };
 

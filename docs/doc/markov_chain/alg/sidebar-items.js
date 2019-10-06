@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["Matrix3","A column major 3x3 square matrix"],["Vec2","Vector with $order elements"],["Vec3","Vector with $order elements"],["Vec4","Vector with $order elements"],["Vec5","Vector with $order elements"],["Vec6","Vector with $order elements"]]});
+initSidebarItems({"struct":[["Matrix3","A column major stack stored matrix"],["Vec3","Vector with N elements"]]});

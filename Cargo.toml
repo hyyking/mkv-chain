@@ -13,7 +13,7 @@ documentation="https://hyyking.github.io/markov-chain-rs"
 homepage="https://github.com/hyyking/markov-chain-rs"
 repository="https://github.com/hyyking/markov-chain-rs"
 
-keywords=["stochastic", "markov", "chain", "probability", "statistics", "markov-chain"]
+keywords=["stochastic", "markov", "probability", "statistics", "markov-chain"]
 
 include = [
     "**/*.rs",

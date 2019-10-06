@@ -8,12 +8,12 @@ probability of each event depends only on the state attained in the previous eve
 # extern crate markov_chain;
 # use markov_chain::{MarkovChain3, linalg::{Matrix3, Vec3}};
 # fn main() {
-    let t_mat = Matrix3::new([  // Transition Matrix
-        [0.9, 0.0, 0.1],
+    let t_mat = Matrix3::new(  // Transition Matrix
+       [[0.9, 0.0, 0.1],
         [0.1, 0.3, 0.6],
         [0.0, 0.1, 0.9]],
     );
-    let initial = Vec3::new([0.1, 0.3, 0.6]); // Inital State
+    let initial = Vec3::new([0.1, 0.3, 0.6]); // Initial State
     let mvc = MarkovChain3::from(t_mat, initial);
     assert_eq!(
         mvc.take_to(3),
@@ -24,29 +24,117 @@ probability of each event depends only on the state attained in the previous eve
 */
 
 #![warn(missing_docs)]
-#![allow(dead_code)]
 
 #[macro_use]
 mod macros;
 pub use macros::*;
 
-///! Algebra module for MarkovChains
-pub mod linalg {
-    vector!(Vec2: 2);
-    vector!(Vec3: 3);
-    vector!(Vec4: 4);
-    vector!(Vec5: 5);
-    vector!(Vec6: 6);
+/**
+Algebra module for MarkovChains.
 
-    matrix!(Matrix2[2, 2], Vec2);
-    matrix!(Matrix3[3, 3], Vec3);
-    matrix!(Matrix4[4, 4], Vec4);
-    matrix!(Matrix5[5, 5], Vec5);
-    matrix!(Matrix6[6, 6], Vec6);
+# Features:
+
+- Vec[2-6]:     stack stored vectors
+- Matrix[2-6]:  stack stored square matrixes
+
+*/
+pub mod linalg {
+    vector!(
+        ///! Stack stored vector with 2 elements
+        Vec2,
+        2
+    );
+    vector!(
+        ///! Stack stored vector with 3 elements
+        Vec3,
+        3
+    );
+    vector!(
+        ///! Stack stored vector with 4 elements
+        Vec4,
+        4
+    );
+    vector!(
+        ///! Stack stored vector with 5 elements
+        Vec5,
+        5
+    );
+    vector!(
+        ///! Stack stored vector with 6 elements
+        Vec6,
+        6
+    );
+
+    matrix!(
+        /// 2 by 2 stack stored square matrix composed of two `Vec2`
+        Matrix2[2, 2],
+        Vec2
+    );
+    matrix!(
+        /// 3 by 3 stack stored square matrix composed of three `Vec3`
+        Matrix3[3, 3],
+        Vec3
+    );
+    matrix!(
+        /// 4 by 4 stack stored square matrix composed of four `Vec4`
+        Matrix4[4, 4],
+        Vec4
+    );
+    matrix!(
+        /// 5 by 5 stack stored square matrix composed of five `Vec5`
+        Matrix5[5, 5],
+        Vec5
+    );
+    matrix!(
+        /// 6 by 6 stack stored square matrix composed of six `Vec6`
+        Matrix6[6, 6],
+        Vec6
+    );
 }
 
-markovchain!(MarkovChain2, linalg::Matrix2, linalg::Vec2);
-markovchain!(MarkovChain3, linalg::Matrix3, linalg::Vec3);
-markovchain!(MarkovChain4, linalg::Matrix4, linalg::Vec4);
-markovchain!(MarkovChain5, linalg::Matrix5, linalg::Vec5);
-markovchain!(MarkovChain6, linalg::Matrix6, linalg::Vec6);
+markovchain!(
+    ///! MarkovChain with two nodes.
+    ///!
+    ///! - Transition graph is a `Matrix2`
+    ///! - Initial state is a `Vec2`
+    MarkovChain2,
+    linalg::Matrix2,
+    linalg::Vec2
+);
+
+markovchain!(
+    ///! MarkovChain with three nodes.
+    ///!
+    ///! - Transition graph is a `Matrix3`
+    ///! - Initial state is a `Vec3`
+    MarkovChain3,
+    linalg::Matrix3,
+    linalg::Vec3
+);
+markovchain!(
+    ///! MarkovChain with four nodes.
+    ///!
+    ///! - Transition graph is a `Matrix4`
+    ///! - Initial state is a `Vec4`
+    MarkovChain4,
+    linalg::Matrix4,
+    linalg::Vec4
+);
+markovchain!(
+    ///! MarkovChain with five nodes.
+    ///!
+    ///! - Transition graph is a `Matrix5`
+    ///! - Initial state is a `Vec5`
+    MarkovChain5,
+    linalg::Matrix5,
+    linalg::Vec5
+);
+markovchain!(
+    ///! MarkovChain with six nodes.
+    ///!
+    ///! - Transition graph is a `Matrix6`
+    ///! - Initial state is a `Vec6`
+    MarkovChain6,
+    linalg::Matrix6,
+    linalg::Vec6
+);

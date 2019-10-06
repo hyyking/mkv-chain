@@ -1,20 +1,29 @@
-///! Generate code for a vector with name and order
-///! # Example:
-///! ```rust
-///! vector!(Vec3, 3)  // vector!(Name, Order)
-///! vector!(Vec5, 5)  // vector!(Name, Order)
-///! main() {
-///!    let vec3_1 = Vec3::new([0.0, 0.0, 0.0]);
-///!    let vec3_2 = Vec3::new([1.0, 1.0, 1.0]);
-///!    let mul = vec3_1 * vec3_2; // 0.0
-///!    
-///!    let vec5 = Vec5::new([1.0, 2.0, 3.0, 4.0, 5.0])
-///! }
-///! ```
+/// Generate code for a vector with name and order
+/// # Example:
+/// ```rust
+/// extern crate markov_chain;
+/// use markov_chain::{vector};
+///
+/// vector!(MyVec3, 3);  // vector!(Name: Order)
+/// vector!(MyVec5, 5);  // vector!(Name: Order)
+///
+/// fn main() {
+///
+///     let vec3_1 = MyVec3::new([0.0, 0.0, 0.0]);
+///     let vec3_2 = MyVec3::new([1.0, 1.0, 1.0]);
+///     assert_eq!(vec3_1 * vec3_2, 0.0);
+///    
+///     let vec5 = MyVec5::new([1.0, 2.0, 3.0, 4.0, 5.0]);
+///     assert_eq!(
+///         vec5.scale(2),
+///         MyVec5::new([2.0, 4.0, 6.0, 8.0 ,10.0])
+///     );
+/// }
+/// ```
 #[macro_export]
 macro_rules! vector {
-    ($name:ident: $order:literal) => {
-        ///! Vector with N elements
+    ($(#[$outer:meta])* $name:ident, $order:literal) => {
+        $(#[$outer])*
         #[derive(Debug, PartialEq, Copy, Clone)]
         pub struct $name([f64; $order]);
 
@@ -40,8 +49,9 @@ macro_rules! vector {
                 self.0.iter()
             }
             ///! Scale the vector by the scaler
-            pub fn scale<T: Into<f64> + Copy>(&mut self, scaler: T) {
-                self.0.iter_mut().for_each(|el| *el *= scaler.into())
+            pub fn scale<T: Into<f64> + Copy>(mut self, scaler: T) -> Self {
+                self.0.iter_mut().for_each(|el| *el *= scaler.into());
+                self
             }
         }
 
@@ -78,26 +88,30 @@ macro_rules! vector {
     };
 }
 
-///! Generate code for a quare matrix with name, order and inner type
-///! # Example:
-///! ```rust
-///! vector!(Vec3, 3)  // vector!(name, order)
-///! sq_matrix!(Matrix3[3], Vec3)  // matrix!(name[order], inner_type)
-///! main() {
-///!    let mat3 = Matrix3::new(
-///!        [[1.0, 0.0, 0.0],
-///!         [0.0, 1.0, 0.0],
-///!         [0.0, 0.0, 1.0]]
-///!    );
-///!    let vec3 = Vec3::new([1.0, 2.0, 3.0]);
-///!    assert_eq!(mat3 * vec3, vec3);
-///! }
-///! ```
+/// Generate code for a quare matrix with name, order and inner type
+/// # Example:
+/// ```rust
+/// extern crate markov_chain;
+/// use markov_chain::{vector, matrix};
+///
+/// vector!(MyVec3, 3); // vector!(name, order)
+/// matrix!(MyMatrix3[3, 3], MyVec3); // matrix!(name[order], inner_type)
+///
+/// fn main() {
+///    let mat3 = MyMatrix3::new(
+///        [[1.0, 0.0, 0.0],
+///         [0.0, 1.0, 0.0],
+///         [0.0, 0.0, 1.0]]
+///    );
+///    let vec3 = MyVec3::new([1.0, 2.0, 3.0]);
+///    assert_eq!(mat3 * vec3, vec3);
+/// }
+/// ```
 #[macro_export]
 macro_rules! matrix {
-    ($name:ident[$row:literal,$col:literal], $inner:ident) => {
-        ///! A stack stored column major matrix
-        #[derive(Debug, Clone, Copy)]
+    ($(#[$outer:meta])* $name:ident[$row:literal,$col:literal], $inner:ident) => {
+        $(#[$outer])*
+        #[derive(Debug, Clone, Copy, PartialEq)]
         pub struct $name([$inner; $col]);
         impl $name {
             ///! Construct a Matrix from a row major representation
@@ -176,6 +190,16 @@ macro_rules! matrix {
                 res
             }
         }
+        impl ::core::ops::Mul<$inner> for $name {
+            type Output = $inner;
+            fn mul(self, other: $inner) -> Self::Output {
+                let mut result = $inner::zeros();
+                self.iter().enumerate().for_each(|(i, vec)| {
+                    result[i] = *vec * other;
+                });
+                result
+            }
+        }
         impl ::core::ops::Mul<&$inner> for &$name {
             type Output = $inner;
             fn mul(self, other: &$inner) -> Self::Output {
@@ -186,36 +210,67 @@ macro_rules! matrix {
                 result
             }
         }
+        impl ::core::ops::Mul<$inner> for &mut $name {
+            type Output = $inner;
+            fn mul(self, other: $inner) -> Self::Output {
+                let mut result = $inner::zeros();
+                self.iter().enumerate().for_each(|(i, vec)| {
+                    result[i] = *vec * other;
+                });
+                result
+            }
+        }
     };
 }
 
-///! Generate a markov chain from Matrix/Vec ident
+/// Generate a markov chain from matrix and vec identifiers.
+///
+/// See generated ones for implemented methods and traits.
+///
+/// # Example:
+/// ```
+/// extern crate markov_chain;
+/// use markov_chain::{markovchain, linalg::{Vec2, Matrix2}};
+///
+/// markovchain!(MyMarkovChain2, Matrix2, Vec2); // Same as markov_chain::MarkovChain2
+///
+/// fn main() {
+///     let t_mat = Matrix2::new(
+///         [[0.2, 0.8],
+///          [0.6, 0.4]]
+///     );
+///     let initial = Vec2::new([0.0, 1.0]);
+///
+///     let mc = MyMarkovChain2::from(t_mat, initial);
+///     println!("{:?}", mc.take_to(5));
+/// }
+/// ```
 #[macro_export]
 macro_rules! markovchain {
-    ($name:ident, $trans:path, $init:path) => {
-        ///! MarkovChain, length of the initial state vector is the number of nodes
+    ($(#[$outer:meta])* $name:ident, $trans:path, $init:path) => {
+        $(#[$outer])*
         pub struct $name {
             init: $init,
             trans: $trans,
         }
 
         impl $name {
-            ///! Construct a Markov Chain from a transition matrix and an initial state
+            /// Construct a Markov Chain from a transition matrix and an initial state
             pub fn from(trans: $trans, init: $init) -> Self {
                 Self { trans, init }
             }
 
-            ///! Replace the transition matrix
+            /// Replace the transition matrix
             pub fn set_trans(&mut self, new_t: $trans) {
                 self.trans = new_t;
             }
 
-            ///! Replace the initial state
+            /// Replace the initial state
             pub fn set_init(&mut self, new_t: $init) {
                 self.init = new_t;
             }
 
-            ///! Run the chain until to a step.
+            /// Run the chain until to a step.
             pub fn take_to(&self, state: usize) -> $init {
                 let mut result = self.init;
                 (0..state).for_each(|_| {
@@ -224,25 +279,41 @@ macro_rules! markovchain {
                 result
             }
 
-            ///! Check if the chain has an absorbing state.
-            pub fn has_absorbing_state(&self) -> bool {
+            /// Check if the chain has an absorbing state. An absorbing state will loop on itself
+            /// catching every bit coming to it.
+            /// A state is considered absorbing if it has a probability of 1 to itself, there is a least one path leading to it.
+            /// # Example:
+            /// ```rust
+            /// # extern crate markov_chain;
+            /// # use markov_chain::{MarkovChain2, linalg::{Vec2, Matrix2}};
+            /// # fn main() {
+            ///     let t_mat = Matrix2::new(
+            ///         [[1.0, 0.0],
+            ///          [0.1, 0.9]]
+            ///     );
+            ///     let initial = Vec2::new([0.0, 1.0]);
+            ///     // Initial state will converge to Vec2::new([1.0, 0.0])
+            ///     assert!(
+            ///         MarkovChain2::from(t_mat, initial).has_absorbing(),
+            ///     );
+            /// # }
+            /// ```
+            pub fn has_absorbing(&self) -> bool {
                 for vec in self.trans.iter() {
                     if Self::could_absorb(vec) {
                         return true;
-                    }
+                    };
                 }
                 return false;
             }
 
-            /// A state is considered absorbing if it has a probability of 1 to itself and there is a least
-            /// one path leading to it.
             fn could_absorb(vec: &$init) -> bool {
                 let mut has_one = false;
                 let mut has_nz = false;
-                vec.iter().for_each(move |el| {
+                vec.iter().for_each(|el| {
                     if *el == 1.0_f64 {
                         has_one = true;
-                    } else if *el != 0.0f64 {
+                    } else if *el > 0.0f64 {
                         has_nz = true;
                     }
                 });

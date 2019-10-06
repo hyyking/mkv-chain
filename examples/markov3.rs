@@ -1,6 +1,6 @@
-extern crate markov_chain;
+extern crate mkv_chain;
 
-use markov_chain::{
+use mkv_chain::{
     linalg::{Matrix3, Vec3},
     MarkovChain3,
 };

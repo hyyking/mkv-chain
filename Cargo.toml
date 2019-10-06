@@ -1,5 +1,5 @@
 [package]
-name = "markov_chain"
+name = "mkv_chain"
 version = "0.2.1"
 authors = ["hyyking <leoduret@outlook.com>"]
 edition = "2018"

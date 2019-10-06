@@ -1,8 +1,8 @@
 /// Generate code for a vector with name and order
 /// # Example:
 /// ```rust
-/// extern crate markov_chain;
-/// use markov_chain::{vector};
+/// extern crate mkv_chain;
+/// use mkv_chain::{vector};
 ///
 /// vector!(MyVec3, 3);  // vector!(Name: Order)
 /// vector!(MyVec5, 5);  // vector!(Name: Order)
@@ -91,8 +91,8 @@ macro_rules! vector {
 /// Generate code for a quare matrix with name, order and inner type
 /// # Example:
 /// ```rust
-/// extern crate markov_chain;
-/// use markov_chain::{vector, matrix};
+/// extern crate mkv_chain;
+/// use mkv_chain::{vector, matrix};
 ///
 /// vector!(MyVec3, 3); // vector!(name, order)
 /// matrix!(MyMatrix3[3, 3], MyVec3); // matrix!(name[order], inner_type)
@@ -229,8 +229,8 @@ macro_rules! matrix {
 ///
 /// # Example:
 /// ```
-/// extern crate markov_chain;
-/// use markov_chain::{markovchain, linalg::{Vec2, Matrix2}};
+/// extern crate mkv_chain;
+/// use mkv_chain::{markovchain, linalg::{Vec2, Matrix2}};
 ///
 /// markovchain!(MyMarkovChain2, Matrix2, Vec2); // Same as markov_chain::MarkovChain2
 ///
@@ -284,8 +284,8 @@ macro_rules! markovchain {
             /// A state is considered absorbing if it has a probability of 1 to itself, there is a least one path leading to it.
             /// # Example:
             /// ```rust
-            /// # extern crate markov_chain;
-            /// # use markov_chain::{MarkovChain2, linalg::{Vec2, Matrix2}};
+            /// # extern crate mkv_chain;
+            /// # use mkv_chain::{MarkovChain2, linalg::{Vec2, Matrix2}};
             /// # fn main() {
             ///     let t_mat = Matrix2::new(
             ///         [[1.0, 0.0],

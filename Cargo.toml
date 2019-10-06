@@ -1,7 +1,21 @@
 [package]
-name = "markov-chain"
-version = "0.1.0"
+name = "markov_chain"
+version = "0.2.1"
 authors = ["hyyking <leoduret@outlook.com>"]
 edition = "2018"
 
-[dependencies]
+license-file="LICENSE"
+
+description="A Stochastic Oriented Markov Chain Crate"
+
+documentation="https://hyyking.github.io/markov-chain-rs"
+
+homepage="https://github.com/hyyking/markov-chain-rs"
+repository="https://github.com/hyyking/markov-chain-rs"
+
+keywords=["stochastic", "markov", "chain", "probability", "statistics", "markov-chain"]
+
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+]

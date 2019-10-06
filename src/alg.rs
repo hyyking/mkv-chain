@@ -35,6 +35,20 @@ impl std::ops::Index<(usize, usize)> for Matrix3 {
     }
 }
 
+///! Generate code for a vector with name and order
+///! Example:
+///! ```rust
+///! vector!(Vec3, 3)  // vector!(Name, Order)
+///! vector!(Vec5, 5)  // vector!(Name, Order)
+///! main() {
+///!    let vec3_1 = Vec3::new([0.0, 0.0, 0.0]);
+///!    let vec3_2 = Vec3::new([1.0, 1.0, 1.0]);
+///!    let mul = vec3_1 * vec3_2; // 0.0
+///!    
+///!    let vec5 = Vec5::new([1.0, 2.0, 3.0, 4.0, 5.0])
+///! }
+///! ```
+#[macro_export]
 macro_rules! vector {
     ($name:ident: $order:literal) => {
         ///! Vector with $order elements

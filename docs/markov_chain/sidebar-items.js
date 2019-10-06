@@ -1,1 +1,0 @@
-initSidebarItems({"mod":[["alg","Algebra module for MarkovChains"]],"struct":[["MarkovChain3","MarkovChain with three nodes"]]});

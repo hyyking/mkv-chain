@@ -20,8 +20,12 @@
 //!    );
 //! # }
 //! ```
-
+#![doc(html_root_url = "https://docs.rs/mkv_chain/0.3.0")]
 #![warn(missing_docs)]
+
+#[cfg(feature = "serde")]
+#[macro_use]
+extern crate serde;
 
 #[macro_use]
 mod macros;
@@ -96,8 +100,8 @@ markovchain!(
     ///! - Transition graph is a `Matrix2`
     ///! - Initial state is a `Vec2`
     MarkovChain2,
-    linalg::Matrix2,
-    linalg::Vec2
+    crate::linalg::Matrix2,
+    crate::linalg::Vec2
 );
 
 markovchain!(
@@ -106,8 +110,8 @@ markovchain!(
     ///! - Transition graph is a `Matrix3`
     ///! - Initial state is a `Vec3`
     MarkovChain3,
-    linalg::Matrix3,
-    linalg::Vec3
+    crate::linalg::Matrix3,
+    crate::linalg::Vec3
 );
 markovchain!(
     ///! MarkovChain with four nodes.
@@ -115,8 +119,8 @@ markovchain!(
     ///! - Transition graph is a `Matrix4`
     ///! - Initial state is a `Vec4`
     MarkovChain4,
-    linalg::Matrix4,
-    linalg::Vec4
+    crate::linalg::Matrix4,
+    crate::linalg::Vec4
 );
 markovchain!(
     ///! MarkovChain with five nodes.
@@ -124,8 +128,8 @@ markovchain!(
     ///! - Transition graph is a `Matrix5`
     ///! - Initial state is a `Vec5`
     MarkovChain5,
-    linalg::Matrix5,
-    linalg::Vec5
+    crate::linalg::Matrix5,
+    crate::linalg::Vec5
 );
 markovchain!(
     ///! MarkovChain with six nodes.
@@ -133,6 +137,6 @@ markovchain!(
     ///! - Transition graph is a `Matrix6`
     ///! - Initial state is a `Vec6`
     MarkovChain6,
-    linalg::Matrix6,
-    linalg::Vec6
+    crate::linalg::Matrix6,
+    crate::linalg::Vec6
 );

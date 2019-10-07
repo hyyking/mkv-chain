@@ -1,6 +1,9 @@
 /// Generate code for a vector with name and order
 /// # Example:
 /// ```rust
+/// # #[cfg(feature = "serde")]
+/// # #[macro_use]
+/// # extern crate serde;
 /// extern crate mkv_chain;
 /// use mkv_chain::{vector};
 ///
@@ -24,7 +27,9 @@
 macro_rules! vector {
     ($(#[$outer:meta])* $name:ident, $order:literal) => {
         $(#[$outer])*
-        #[derive(Debug, PartialEq, Copy, Clone)]
+
+        #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+        #[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
         pub struct $name([f64; $order]);
 
         impl $name {
@@ -73,12 +78,14 @@ macro_rules! vector {
                 self.iter().zip(other.iter()).map(|(x, y)| x * y).sum()
             }
         }
+        #[doc(hidden)]
         impl ::core::ops::Mul for &$name {
             type Output = f64;
             fn mul(self, other: &$name) -> Self::Output {
                 self.iter().zip(other.iter()).map(|(x, y)| x * y).sum()
             }
         }
+        #[doc(hidden)]
         impl ::core::ops::Mul for &mut $name {
             type Output = f64;
             fn mul(self, other: &mut $name) -> Self::Output {
@@ -91,6 +98,9 @@ macro_rules! vector {
 /// Generate code for a quare matrix with name, order and inner type
 /// # Example:
 /// ```rust
+/// # #[cfg(feature = "serde")]
+/// # #[macro_use]
+/// # extern crate serde;
 /// extern crate mkv_chain;
 /// use mkv_chain::{vector, matrix};
 ///
@@ -111,7 +121,8 @@ macro_rules! vector {
 macro_rules! matrix {
     ($(#[$outer:meta])* $name:ident[$row:literal,$col:literal], $inner:ident) => {
         $(#[$outer])*
-        #[derive(Debug, Clone, Copy, PartialEq)]
+        #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+        #[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
         pub struct $name([$inner; $col]);
         impl $name {
             ///! Construct a Matrix from a row major representation
@@ -200,6 +211,7 @@ macro_rules! matrix {
                 result
             }
         }
+        #[doc(hidden)]
         impl ::core::ops::Mul<&$inner> for &$name {
             type Output = $inner;
             fn mul(self, other: &$inner) -> Self::Output {
@@ -210,6 +222,7 @@ macro_rules! matrix {
                 result
             }
         }
+        #[doc(hidden)]
         impl ::core::ops::Mul<$inner> for &mut $name {
             type Output = $inner;
             fn mul(self, other: $inner) -> Self::Output {
@@ -229,6 +242,9 @@ macro_rules! matrix {
 ///
 /// # Example:
 /// ```
+/// # #[cfg(feature = "serde")]
+/// # #[macro_use]
+/// # extern crate serde;
 /// extern crate mkv_chain;
 /// use mkv_chain::{markovchain, linalg::{Vec2, Matrix2}};
 ///
@@ -249,6 +265,8 @@ macro_rules! matrix {
 macro_rules! markovchain {
     ($(#[$outer:meta])* $name:ident, $trans:path, $init:path) => {
         $(#[$outer])*
+        #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+        #[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
         pub struct $name {
             init: $init,
             trans: $trans,

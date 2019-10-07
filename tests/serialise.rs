@@ -1,7 +1,6 @@
-#[cfg(feature = "serde")]
+#[cfg(all(test, feature = "serde"))]
 mod serde_test {
     #[test]
-    #[cfg_attr(not(feature = "serde"), ignore)]
     fn test_serialize_vec() {
         use mkv_chain::linalg::Vec3;
         let tested = Vec3::new([0.1, 0.3, 0.6]); // Inital State
@@ -10,7 +9,6 @@ mod serde_test {
     }
 
     #[test]
-    #[cfg_attr(not(feature = "serde"), ignore)]
     fn test_serialize_mat() {
         use mkv_chain::linalg::Matrix3;
         let t_mat = Matrix3::new([[0.9, 0.0, 0.1], [0.1, 0.3, 0.6], [0.0, 0.1, 0.9]]);
@@ -19,7 +17,6 @@ mod serde_test {
     }
 
     #[test]
-    #[cfg_attr(not(feature = "serde"), ignore)]
     fn test_serialize_chain() {
         use mkv_chain::linalg::Matrix3;
         let t_mat = Matrix3::new([[0.9, 0.0, 0.1], [0.1, 0.3, 0.6], [0.0, 0.1, 0.9]]);

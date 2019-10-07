@@ -1,12 +1,7 @@
-# *mkv_chain*
+# *mkv_chain* [![https://docs.rs/mkv_chain/badge.svg](https://docs.rs/mkv_chain)] [![https://img.shields.io/crates/v/mkv_chain](https://crates.io/crates/mkv_chain)]
 
 Stochastic Oriented Markov Chain Crate
 
-## [Docs](https://hyyking.github.io/markov-chain-rs)
-
-## Install
-
-In cargo.toml
 ```toml
 [dependencies]
 mkv_chain="0.3.0"

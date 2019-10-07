@@ -1,5 +1,5 @@
 before_install:
-  - chmod +x build.sh
+  - chmod +x travis.sh
 language: rust
 rust:
   - stable

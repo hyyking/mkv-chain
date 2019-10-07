@@ -4,7 +4,7 @@ Stochastic Oriented Markov Chain Crate
 
 ```toml
 [dependencies]
-mkv_chain="0.3.0"
+mkv_chain="0.3.1"
 ```
 
 ## Example

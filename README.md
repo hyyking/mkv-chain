@@ -1,4 +1,4 @@
-# *mkv_chain* [![Latest Version](https://img.shields.io/crates/v/mkv_chain.svg)](https://crates.io/crates/mkv_chain) [![Rust Documentation](https://docs.rs/mkv_chain/badge.svg)](https://docs.rs/mkv_chain)
+# *mkv_chain* [![Build Status](https://travis-ci.org/hyyking/markov-chain-rs.svg?branch=master)](https://travis-ci.org/hyyking/markov-chain-rs) [![Latest Version](https://img.shields.io/crates/v/mkv_chain.svg)](https://crates.io/crates/mkv_chain) [![Rust Documentation](https://docs.rs/mkv_chain/badge.svg)](https://docs.rs/mkv_chain)
 
 Stochastic Oriented Markov Chain Crate
 

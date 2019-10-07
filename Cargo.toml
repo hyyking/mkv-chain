@@ -4,7 +4,8 @@ version = "0.3.0"
 authors = ["hyyking <leoduret@outlook.com>"]
 edition = "2018"
 
-license-file="LICENSE"
+licence = "MIT"
+license-file = "LICENSE"
 readme = "README.md"
 
 description="A Stochastic Oriented Markov Chain Crate"
@@ -30,7 +31,6 @@ serde = { version = "1.0", optional = true, features = ["derive"] }
 [dev-dependencies]
 version-sync = "0.8"
 serde_json = "1.0"
-mkv_chain = {version="0.3.0", path="", features=["serde"]}
 
 [[example]]
 name = "markov3"
